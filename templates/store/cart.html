@@ -3,7 +3,13 @@
 <section class="section-content padding-y bg">
   <div class="container">
     <!-- ============================ COMPONENT 1 ================================= -->
-
+    {% if not cart_items %}
+    <h2 class="text-center">El carrito de compras estas vacio</h2>
+    <br />
+    <div class="text-center">
+      <a href="{% url 'store' %}" class="btn btn-primary">Continua Comprando</a>
+    </div>
+    {% else %}
     <div class="row">
       <aside class="col-lg-9">
         <div class="card">
@@ -28,7 +34,9 @@
                       />
                     </div>
                     <figcaption class="info">
-                      <a href="#" class="title text-dark"
+                      <a
+                        href="{{cart_item.product.get_url}}"
+                        class="title text-dark"
                         >{{cart_item.product.product_name}}</a
                       >
                       <p class="text-muted small">
@@ -43,13 +51,14 @@
                   <div class="col">
                     <div class="input-group input-spinner">
                       <div class="input-group-prepend">
-                        <button
+                        <a
+                          href="{% url 'remove_cart' cart_item.product.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-plus"
                         >
                           <i class="fa fa-minus"></i>
-                        </button>
+                        </a>
                       </div>
                       <input
                         type="text"
@@ -57,13 +66,14 @@
                         value="{{cart_item.quantity}}"
                       />
                       <div class="input-group-append">
-                        <button
+                        <a
+                          href="{% url 'add_cart' cart_item.product.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-minus"
                         >
                           <i class="fa fa-plus"></i>
-                        </button>
+                        </a>
                       </div>
                     </div>
                     <!-- input-group.// -->
@@ -80,7 +90,12 @@
                   <!-- price-wrap .// -->
                 </td>
                 <td class="text-right">
-                  <a href="" class="btn btn-danger"> Eliminar</a>
+                  <a
+                    href="{% url 'remove_cart_item' cart_item.product.id %}"
+                    class="btn btn-danger"
+                  >
+                    Eliminar</a
+                  >
                 </td>
               </tr>
               {% endfor %}
@@ -95,15 +110,17 @@
           <div class="card-body">
             <dl class="dlist-align">
               <dt>Total price:</dt>
-              <dd class="text-right">$69.97</dd>
+              <dd class="text-right">${{total}}7</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Tax:</dt>
-              <dd class="text-right">$10.00</dd>
+              <dd class="text-right">${{tax}}</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Total:</dt>
-              <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
+              <dd class="text-right text-dark b">
+                <strong>${{grand_total}}</strong>
+              </dd>
             </dl>
             <hr />
             <p class="text-center mb-3">
@@ -115,7 +132,7 @@
             <a href="./place-order.html" class="btn btn-primary btn-block">
               Pagar
             </a>
-            <a href="./store.html" class="btn btn-light btn-block"
+            <a href="{% url 'store' %}" class="btn btn-light btn-block"
               >Continua comprando</a
             >
           </div>
@@ -125,6 +142,7 @@
       </aside>
       <!-- col.// -->
     </div>
+    {% endif %}
     <!-- row.// -->
     <!-- ============================ COMPONENT 1 END .// ================================= -->
   </div>
